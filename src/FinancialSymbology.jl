@@ -16,10 +16,14 @@ function main()
     @show figi = Figi("BBG000B9Y5X2")
     @show figiuniqueid = FigiUniqueID("EQ00101695000010000")
     @show ticker = Ticker("AAPL US Equity")
+    @show aapl = Equity("AAPL US Equity")
+    @show vod = Equity("VOD LN Equity")
 
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
+    using Pkg
+    Pkg.activate(".")
     main()
 end
 
