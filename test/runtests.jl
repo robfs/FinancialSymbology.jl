@@ -1,4 +1,4 @@
-using figi
+using FinancialSymbology
 using Test
 
 @testset "figi.jl" begin
