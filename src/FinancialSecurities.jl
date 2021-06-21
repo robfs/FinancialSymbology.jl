@@ -11,9 +11,6 @@ const MaybeString = Union{String, Missing}
 
 abstract type FinancialSecurity end
 
-Base.show(io::IO, x::FinancialSecurity) = print(io, "$(typeof(x)): $(x.id)")
-Base.show(io::IO, ::MIME"text/plain", x::FinancialSecurity) = print(io, "$(typeof(x)): $(x.id)")
-
 mutable struct Equity <: FinancialSecurity
     id::FinancialSymbol
     figi::MaybeString
@@ -44,7 +41,7 @@ mutable struct Equity <: FinancialSecurity
 end
 
 function makejob(id::FinancialSymbol, idtype::String, securitytype::String)::Dict{String,String}
-    return Dict("marketSecDes"=>securitytype, "idValue"=>id, "idType"=>idtype)
+    return Dict("marketSecDes"=>securitytype, "idValue"=>id.x, "idType"=>idtype)
 end
 
 function makejob(id::Ticker, securitytype::String="")::Dict{String, String}
@@ -57,8 +54,9 @@ makejob(id::Cusip, securitytype::String)::Dict{String, String} = makejob(id, "ID
 makejob(id::Isin, securitytype::String)::Dict{String, String} = makejob(id, "ID_ISIN", securitytype)
 makejob(id::Figi, securitytype::String)::Dict{String, String} = makejob(id, "ID_BB_GLOBAL", securitytype)
 
-makeargsdict(d::Dict{String,Any})::Dict{Symbol,String} = Dict(Symbol(k)=>v for (k, v) in d)
+makesymbolkeys(d::Dict{String,<:Any})::Dict{Symbol, T where {T<:Any}} = Dict(Symbol(k)=>v for (k, v) in d)
 
-Equity(id::String) = Equity(;id=Ticker(id), ((Ticker(id) |> makejob |> fetchsecuritydata)["data"][1] |> makeargsdict)...)
+Equity(id::FinancialSymbol) = Equity(;id=id, ((makejob(id, "Equity") |> fetchsecuritydata)["data"][1] |> makesymbolkeys)...)
+Equity(id::String) = Equity(symboltype(id)(id))
 
 end # module

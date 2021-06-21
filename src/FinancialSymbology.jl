@@ -16,8 +16,10 @@ function main()
     @show figi = Figi("BBG000B9Y5X2")
     @show figiuniqueid = FigiUniqueID("EQ00101695000010000")
     @show ticker = Ticker("AAPL US Equity")
-    @show aapl = Equity("AAPL US Equity")
+    
+    @show aapl = Equity(ticker)
     @show vod = Equity("VOD LN Equity")
+    @show ibm = Equity("US4592001014")
 
 end
 
