@@ -2,7 +2,7 @@
 
 A package to standardise financial security symbology with the [OpenFIGI](https://www.openfigi.com) methodology. 
 
-Inlcudes automatic symbol type detection to 
+Inlcudes automatic symbol type detection to allow for multiple ID input types (i.e. Sedol, Cusip, ISIN etc.).
 
 Communicates with the [OpenFIGI API](https://www.openfigi.com/api) to retrieve security information. 
 
