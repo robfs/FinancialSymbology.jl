@@ -2,7 +2,7 @@ module SymbolTests
 
 using ..FinancialSymbols
 
-export issedol, iscusip, isisin, isfigi, symboltype
+export issedol, iscusip, isisin, isfigi, makesymbol
 
 const YELLOWKEYS =["Comdty", "Corp", "Curncy", "Equity", "Govt", "Index", "M-Mkt", "Mtge", "Muni", "Pfd"]
 
@@ -33,8 +33,12 @@ function symboltype(x::String)::DataType
     elseif isfigi(x); return Figi
     elseif isisin(x); return Isin
     elseif isticker(x); return Ticker
-    else; return FigiUniqueID
+    else; return Figi
     end
+end
+
+function makesymbol(x::String)::FinancialSymbol
+    return symboltype(x)(x)
 end
 
 

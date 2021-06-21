@@ -1,7 +1,7 @@
 module FinancialSymbols
 
 using Base: String, Integer
-export FinancialSymbol, Sedol, Cusip, Isin, Figi, FigiUniqueID, Ticker
+export FinancialSymbol, Sedol, Cusip, Isin, Figi, Ticker
 
 abstract type FinancialSymbol end
 
