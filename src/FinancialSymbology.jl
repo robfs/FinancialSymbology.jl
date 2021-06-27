@@ -1,32 +1,15 @@
 module FinancialSymbology
 
-include("FinancialSymbols.jl")
-include("SymbolTests.jl")
-include("FinancialSecurities.jl")
+include("Symbols/Identifiers.jl")
+include("Symbols/IdChecks.jl")
+include("APIs/APIs.jl")
+include("APIs/OpenFigi.jl")
 
-using .FinancialSymbols, .FinancialSecurities, .SymbolTests
+using .Identifiers, .IdChecks, .APIs, .OpenFigi
 
-export Sedol, Cusip, Isin, Figi, FigiUniqueID, Equity
+export Identifier, Sedol, Cusip, Isin, Figi, Ticker, Index
+export makesymbol
+export OpenFigiAPI
+export fetchsecuritydata
 
-function main()
-
-    @show sedol = Sedol("B0YQ5W0")
-    @show cusip = Cusip("037833901")
-    @show isin = Isin("US0378331005")
-    @show figi = Figi("BBG000B9Y5X2")
-    @show figiuniqueid = FigiUniqueID("EQ00101695000010000")
-    @show ticker = Ticker("AAPL US Equity")
-    
-    @show aapl = Equity(ticker)
-    @show vod = Equity("VOD LN Equity")
-    @show ibm = Equity("US4592001014")
-
-end
-
-if abspath(PROGRAM_FILE) == @__FILE__
-    using Pkg
-    Pkg.activate(".")
-    main()
-end
-
-end
+end # module

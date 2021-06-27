@@ -6,10 +6,11 @@ version = "0.1.0"
 [deps]
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+StructArrays = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
 
 [compat]
-JSON = "0.21"
 HTTP = "0.9"
+JSON = "0.21"
 julia = "1.6"
 
 [extras]
