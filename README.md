@@ -1,4 +1,4 @@
-# FinancialSymbology v0.1.0
+# FinancialSymbology v0.2.0
 
 A package to standardise financial security symbology with the [OpenFIGI](https://www.openfigi.com) methodology. 
 
@@ -10,48 +10,57 @@ Communicates with the [OpenFIGI API](https://www.openfigi.com/api) to retrieve s
 
 ```julia
 using FinancialSymbology
+```
+If you have an OpenFIGI API key it can be set in one of two ways. 
+```python
+# By setting the environment variable
+ENV["X-OPENFIGI-APIKEY"] = "enter-api-key"
+api = OpenFigiAPI()
 
-# Setting the API key if you have one significantly increases the scale of available queries
-ENV["OPENFIGI_API_KEY"] = "enter_api_key"
+# By providing an input to the class
+api = OpenFigiAPI(apikey="enter-api-key")
+```
+## Symbols
 
-sedol = Sedol("B0YQ5W0")
-cusip = Cusip("B0YQ5W0")
-isin = Isin("US0378331005")
-figi = Figi("BBG000B9Y5X2")
-ticker = Ticker("AAPL US Equity")
+Financial symbols must first be converted to a vector of `Identifier`. This can be automated or done manually (automated detection unavailable for `Index` identifiers).
 
-# Only Equity type exists so far
-aapl = Equity(ticker)
-vod = Equity("VOD LN Equity")
-ibm = Equity("US4592001014")
+```julia
+ids = [
+   Sedol("B0YQ5W0"),
+   Cusip("037833100"),
+   Isin("US0378331005"),
+   Figi("BBG000B9Y5X2"),
+   Ticker("AAPL US Equity")
+]
 
-#= Passing a vector of ids (strings or symbols) is more efficient than vectorizing
-   the constructor (Equity.()) because it queries the API in batches and constructs 
-   the elements from the response rather than fetching every security as an individual 
-   query. Query limits are defined by the OpenFIGI API and whether or not you have a
-   API Key, but once limits are hit, the functions will wait and retry once your allowance
-   has reset. =#
+# is equivalent to
 
-listofequities = Equity(["B0YQ5W0", "B0YQ5W0", "US0378331005", "BBG000B9Y5X2"])
-
+ids = makesymbol.([
+   "B0YQ5W0",
+   "037833100",
+   "US0378331005",
+   "BBG000B9Y5X2",
+   "AAPL US Equity"
+])
 ```
 
-## Equity
+## Fetching Data
 
-Equity types will retrieve the following information:
+The `Identifier` vector can then be passed to the `fetchsecuritydata` function to retrieve informaiton from the OpenFIGI database. 
 
-* FIGI (unique asset level ID)
-* Name
-* Ticker (e.g. AAPL)
-* Exchange code (e.g. US, LN)
-* Composite FIGI (country level ID)
-* Security Type (e.g. Common Stock)
-* Market Sector - will always be Equity
-* Share class FIGI (global share class ID)
-* Security Type 2
-* Security Description
-* Alternatives
-  * These are different symbols that also match the query
-  * This is returned as a `StructArray` so fields can be easily accessed for all alternatives
+```julia
+data = fetchsecuritydata(ids)
 
+# An API can be manually created and passed
+api = OpenFigiAPI()
+data = fetchsecuritydata(ids, api)
+```
 
+The function returns a dictionary where the keys are the identifiers and the values are a `StructArray` of `OpenFigiAsset` types. The fields can be indexed into or the objects can be passed to other constructors.
+
+```julia
+@show data["US0378331005"].figi
+
+using DataFrames
+@show data["US0378331005"] |> DataFrame
+```
