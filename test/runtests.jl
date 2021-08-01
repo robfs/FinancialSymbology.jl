@@ -48,5 +48,4 @@ end
     @test all(map(k -> job[k] == tickerjob[k], tickerjob |> keys |> collect))
     resp = fetchsecuritydata(ids)
     @test length(resp) == length(ids)
-    @test all(map(r -> r.status == 200, resp))
 end
