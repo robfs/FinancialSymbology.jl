@@ -67,6 +67,9 @@ function OpenFigiAsset(d::Dict{String, Any})
     return OpenFigiAsset(; keystosymbols(d)...)
 end
 
+Base.show(io::IO, x::OpenFigiAsset) = print(io, typeof(x), "\n", join(["$(rpad(fld, 22, " ")) => $(getfield(x,fld))" for fld in fieldnames(typeof(x))], "\n"))
+Base.show(io::IO, ::MIME"text/plain", x::OpenFigiAsset) = print(io, "FIGI: $(x.figi) $(x.securityType2)")
+
 figiidtype(id::Sedol)::String = "ID_SEDOL"
 figiidtype(id::Cusip)::String = "ID_CUSIP"
 figiidtype(id::Isin)::String = "ID_ISIN"
