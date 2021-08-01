@@ -1,32 +1,52 @@
 using FinancialSymbology
 using Test
 
+import FinancialSymbology.OpenFigi: figiidtype, makeurl, makejob, splitjobs
+
+idstrings = [
+    "FR0000121014", "US88160R1014", "AAPL US Equity", "5505072", "CH0210483332",
+    "BYVZLD1", "BDDXSM4", "42751Q105", "FR0000120693", "654106103", "GB0002374006" 
+]
+
+idchecks = [
+    Isin, Isin, Ticker, Sedol, Isin, Sedol, Sedol, Cusip, Isin, Cusip, Isin
+]
+
+figitypes = [
+    "ID_ISIN","ID_ISIN","TICKER","ID_SEDOL","ID_ISIN",
+    "ID_SEDOL","ID_SEDOL","ID_CUSIP","ID_ISIN","ID_CUSIP","ID_ISIN"
+]
+
+sedoljob = Dict([
+    "idType"=>"ID_SEDOL",
+    "idValue"=>"5505072"
+])
+
+tickerjob = Dict([
+    "idType"=>"TICKER",
+    "idValue"=>"AAPL",
+    "exchCode"=>"US",
+    "marketSecDes"=>"Equity"
+])
+
+jobs = [sedoljob, tickerjob]
+
+splitjob = [[sedoljob],[tickerjob]]
+
+ids = makesymbol.(idstrings)
 
 @testset "IdChecks.jl" begin
-    @test makesymbol("B0YQ5W0") isa Sedol
-    @test makesymbol("037833100") isa Cusip
-    @test makesymbol("US0378331005") isa Isin
-    @test makesymbol("BBG000B9Y5X2") isa Figi
-    @test makesymbol("AAPL US Equity") isa Ticker
-    @test makesymbol("  B0YQ5W0 ") isa Sedol
-    @test makesymbol(" AHFMCF     Corp ") isa Ticker
+    @test all(map((id, t) -> id isa t, ids, idchecks))
 end
 
 @testset "OpenFigiApi.jl" begin
-    x = [1, 2, 3, 4, 5, 6, 7]
-    xsplit = FinancialSymbology.FinancialSecurities.OpenFigiApi.splitvector(x, 3) 
-    y = ['1','2','3','4','5','6','7']
-    ysplit = FinancialSymbology.FinancialSecurities.OpenFigiApi.splitvector(y, 4) 
-    @test xsplit == [[1, 2, 3], [4, 5, 6], [7]]
-    @test ysplit == [['1','2','3','4'],['5','6','7']]
-    @test xsplit isa Vector{Vector{Int}}
-    @test ysplit isa Vector{Vector{Char}}
-    
-    a = 10
-    b = 60
-    h = ["x"=>"sd"]
-    ENV["OPENFIGI_API_KEY"] = "MYAPIKEY"
-    (h, a, b) = FinancialSymbology.FinancialSecurities.OpenFigiApi.checkapikey(h, a, b)
-    @test a == 100
-    @test b == 6
+    @test all(map((id, t) -> figiidtype(id) == t, ids, figitypes))
+    @test makeurl(OpenFigiAPI()) == "https://api.openfigi.com/v3/mapping"
+    job = makejob(ids[4])
+    @test all(map(k -> job[k] == sedoljob[k], sedoljob |> keys |> collect))
+    job = makejob(ids[3])
+    @test all(map(k -> job[k] == tickerjob[k], tickerjob |> keys |> collect))
+    resp = fetchsecuritydata(ids)
+    @test length(resp) == length(ids)
+    @test all(map(r -> r.status == 200, resp))
 end

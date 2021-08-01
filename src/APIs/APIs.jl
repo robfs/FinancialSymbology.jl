@@ -9,6 +9,8 @@ export API
 
 abstract type API end
 
+Base.show(io::IO, api::API) = print(io, "$(typeof(api)): $(makeurl(api))")
+
 function getlimits(api::API)::Tuple
 end
 

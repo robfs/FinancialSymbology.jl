@@ -15,7 +15,7 @@ function iscusip(x::AbstractString)::Bool
 end
 
 function isisin(x::AbstractString)::Bool
-    return length(x) == 12 && all(isdigit, x[3:end]) && all(isletter, x[1:2]) && parse.(Int, collect(x), base=36) |> join |> luhntest
+    return length(x) == 12 && all(map(c -> isdigit(c) || isletter(c), collect(x[3:end]))) && all(isletter, x[1:2]) && parse.(Int, collect(x), base=36) |> join |> luhntest
 end
 
 function isticker(x::AbstractString)::Bool
