@@ -21,7 +21,7 @@ end
 function request(x::Vector{String}, api::API)::Response
 end
 
-function fetchsecuritydata(ids::Vector{Identifier}, api::API)::Dict{String, StructArray}
+function fetchsecuritydata(ids::Vector{<:Identifier}, api::API)::Dict{String, StructArray}
 end
 
 end # module

@@ -48,4 +48,7 @@ end
     @test all(map(k -> job[k] == tickerjob[k], tickerjob |> keys |> collect))
     resp = fetchsecuritydata(ids)
     @test length(resp) == length(ids)
+    fetchsecuritydata(ids[1])
+    fetchsecuritydata([ids[1]])
+    fetchsecuritydata(ids[2])
 end

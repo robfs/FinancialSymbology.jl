@@ -97,7 +97,7 @@ function getlimits(api::OpenFigiAPI)::Tuple{Int, Int, Int}
     return haskey(d, APIKEYNAME) && length(d[APIKEYNAME]) > 0 ? (100, 6, 25) : (5, 60, 25)
 end
 
-function request(ids::Vector{Identifier}, api::OpenFigiAPI)::Vector{Response}
+function request(ids::Vector{<:Identifier}, api::OpenFigiAPI)::Vector{Response}
     (maxjobs, waittime, maxrequests) = getlimits(api)
     jobs::Vector{Dict{String, String}} = makejob.(ids)
     joblist::Vector{Vector{Dict{String, String}}} = splitjobs(jobs, maxjobs)
@@ -117,7 +117,7 @@ end
 
 keystosymbols(d::Dict{String, T} where T)::Dict{Symbol, T} where T = Dict([Symbol(k)=>v for (k, v) in d])
 
-function extractdata(ids::Vector{Identifier}, responses::Vector{Response})::Dict{String, StructArray}
+function extractdata(ids::Vector{<:Identifier}, responses::Vector{Response})::Dict{String, StructArray}
     out::Vector{Pair{String, StructArray}} = []
     i::Int = 1
     for j in JSON.parse.(String.([r.body for r in responses]))
@@ -131,9 +131,13 @@ function extractdata(ids::Vector{Identifier}, responses::Vector{Response})::Dict
     return Dict(out)
 end
 
-function fetchsecuritydata(ids::Vector{Identifier}, api::OpenFigiAPI=OpenFigiAPI())::Dict{String, StructArray}
+function fetchsecuritydata(ids::Vector{<:Identifier}, api::OpenFigiAPI=OpenFigiAPI())::Dict{String, StructArray}
     responses = request(ids, api)
     return extractdata(ids, responses)
+end
+
+function fetchsecuritydata(id::Identifier, api::OpenFigiAPI=OpenFigiAPI())::Dict{String, StructArray}
+    return fetchsecuritydata([id], api)
 end
 
 end # module
