@@ -12,7 +12,7 @@ Communicates with the [OpenFIGI API](https://www.openfigi.com/api) to retrieve s
 using FinancialSymbology
 ```
 If you have an OpenFIGI API key it can be set in one of two ways. 
-```python
+```julia
 # By setting the environment variable
 ENV["X-OPENFIGI-APIKEY"] = "enter-api-key"
 api = OpenFigiAPI()
