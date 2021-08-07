@@ -10,6 +10,12 @@ export OpenFigiAPI, fetchsecuritydata
 
 const APIKEYNAME = "X-OPENFIGI-APIKEY"
 
+"""
+    OpenFigiAPI()
+    OpenFigiAPI(protocol="https", base="api.openfigi.com", version="v3", path="mapping", headers=["Content-Type"=>"aaplication/json", apikey=""])
+
+Create an OpenFigiAPI type to be passed to functions accepting API types.
+"""
 mutable struct OpenFigiAPI <: API
     protocol::AbstractString
     base::AbstractString
@@ -32,6 +38,11 @@ function OpenFigiAPI(protocol::AbstractString="https",
 
 end
 
+"""
+    OpenFigiAsset(figi, marketSector, securityType, ticker, name, exchCode, securityDescription, securityType2, compositeFIGI, shareClassFIGI)
+
+Return type from OpenFigiAPI fetch.
+"""
 mutable struct OpenFigiAsset
     figi::Union{String, Nothing}
     marketSector::Union{String, Nothing}
@@ -77,6 +88,12 @@ figiidtype(id::Figi)::String = "ID_BB_GLOBAL"
 figiidtype(id::Ticker)::String = "TICKER"
 figiidtype(id::Index)::String = "VENDOR_INDEX_CODE"
 
+
+"""
+    makejob(id::Identifier)
+
+Convert identifier into appropriate POST job for API.
+"""
 makejob(id::Identifier)::Dict{String, String} = Dict(("idType"=>figiidtype(id), "idValue"=>id.x))
 
 function makejob(id::Ticker)::Dict{String, String}
@@ -88,15 +105,30 @@ function makejob(id::Ticker)::Dict{String, String}
     end
 end
 
+"""
+    splitjobs(jobs, maxjobs)
+
+Split POST request jobs based on limits. 
+"""
 function splitjobs(jobs::Vector{Dict{String, String}}, maxjobs::Int)::Vector{Vector{Dict{String, String}}}
     return [i+maxjobs > length(jobs) ? jobs[i:end] : jobs[i:i+maxjobs-1] for i in 1:maxjobs:length(jobs)]
 end
 
+"""
+    getlimits(api)
+
+Get API request limits based on presence of an APIKEY.
+"""
 function getlimits(api::OpenFigiAPI)::Tuple{Int, Int, Int}
     d = Dict(api.headers)
     return haskey(d, APIKEYNAME) && length(d[APIKEYNAME]) > 0 ? (100, 6, 25) : (5, 60, 25)
 end
 
+"""
+    request(ids::Vector{<:Identifier}, api::OpenFigiAPI)
+
+Use HTTP.request to fetch from OpenFigiAPI.
+"""
 function request(ids::Vector{<:Identifier}, api::OpenFigiAPI)::Vector{Response}
     (maxjobs, waittime, maxrequests) = getlimits(api)
     jobs::Vector{Dict{String, String}} = makejob.(ids)
@@ -131,6 +163,25 @@ function extractdata(ids::Vector{<:Identifier}, responses::Vector{Response})::Di
     return Dict(out)
 end
 
+"""
+    fetchsecuritydata(id::Identifier, api=OpenFigiAPI())    
+    fetchsecuritydata(ids::Vector{Identifier}, api=OpenFigiAPI())
+
+Fetch Identifier data from API.
+
+Do not broadcast this function over a vector of identifiers. 
+Pass the vector as the `ids` argument.
+
+See also: [`makesymbol`](@ref)
+
+# Examples
+```jldoctest
+julia> fetchsecuritydata([Ticker("AAPL US Equity"), Sedol("BDDXSM4")])
+Dict{String, StructArrays.StructArray} with 2 entries:
+  "AAPL US Equity" => FinancialSymbology.OpenFigi.OpenFigiAsset[OpenFigiAsset…
+  "BDDXSM4"        => FinancialSymbology.OpenFigi.OpenFigiAsset[OpenFigiAsset…
+```
+"""
 function fetchsecuritydata(ids::Vector{<:Identifier}, api::OpenFigiAPI=OpenFigiAPI())::Dict{String, StructArray}
     responses = request(ids, api)
     return extractdata(ids, responses)

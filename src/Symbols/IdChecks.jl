@@ -38,6 +38,21 @@ function symboltype(x::AbstractString)::DataType
     end
 end
 
+"""
+    makesymbol(x)
+
+Automatically detect `Identifier` and create type.
+
+See also: [`fetchsecuritydata`](@ref)
+
+# Examples
+```jldoctest
+julia> ids = makesymbol.(["AAPL US Equity", "BDDXSM4"])
+2-element Vector{Identifier}:
+ Ticker: AAPL US Equity
+ Sedol: BDDXSM4
+```
+"""
 function makesymbol(x::AbstractString)::Identifier
     return symboltype(x)(x)
 end

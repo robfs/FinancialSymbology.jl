@@ -9,27 +9,106 @@ abstract type Identifier end
 #####################################
 #      DEFINE IDENTIFIER TYPES      #
 #####################################
+
+"""
+    Sedol(x::String)
+
+Create a Sedol `Identifier` type.
+
+See also: [`makesymbol`](@ref)
+
+# Examples
+```jldoctest
+julia> Sedol("5505072")
+Sedol: 5505072
+```
+"""
 struct Sedol <: Identifier
     x::AbstractString
 end
 
+"""
+    Cusip(x::String)
+
+Create a Cusip `Identifier` type.
+
+See also: [`makesymbol`](@ref)
+
+# Examples
+```jldoctest
+julia> Cusip("42751Q105")
+Cusip: 42751Q105
+```
+"""
 struct Cusip <: Identifier
     x::AbstractString
 end
 
+"""
+    Isin(x::String)
+
+Create a Isin `Identifier` type.
+
+See also: [`makesymbol`](@ref)
+
+# Examples
+```jldoctest
+julia> Isin("US88160R1014")
+Isin: US88160R1014
+```
+"""
 struct Isin <: Identifier
     x::AbstractString
 end
 
+"""
+    Figi(x::String)
+
+Create a Figi `Identifier` type.
+
+See also: [`makesymbol`](@ref)
+
+# Examples
+```jldoctest
+julia> Figi("BBG00JRQS527")
+Isin: BBG00JRQS527
+```
+"""
 struct Figi <: Identifier
     x::AbstractString
 end
 
+"""
+    Ticker(x::String)
+
+Create a Bloomberg Ticker `Identifier` type.
+
+See also: [`makesymbol`](@ref)
+
+# Examples
+```jldoctest
+julia> Ticker("AAPL US Equity")
+Ticker: AAPL US Equity
+```
+"""
 struct Ticker <: Identifier
     x::AbstractString
     Ticker(x::AbstractString) = new(join(split(x), ' '))
 end
 
+"""
+    Index(x::String)
+
+Create an Index `Identifier` type.
+
+See also: [`makesymbol`](@ref)
+
+# Examples
+```jldoctest
+julia> Index("990100")
+Index: 990100
+```
+"""
 struct Index <: Identifier
     x::AbstractString
 end
