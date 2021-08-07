@@ -1,4 +1,4 @@
-# FinancialSymbology v0.2.1
+# FinancialSymbology v0.2.2
 
 A package to standardise financial security symbology with the [OpenFIGI](https://www.openfigi.com) methodology. 
 
