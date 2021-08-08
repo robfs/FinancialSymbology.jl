@@ -46,7 +46,9 @@ Automatically detect `Identifier` and create type.
 See also: [`fetchsecuritydata`](@ref)
 
 # Examples
-```jldoctest
+```jldoctest makesymboldoc
+julia> using FinancialSymbology
+
 julia> ids = makesymbol.(["AAPL US Equity", "BDDXSM4"])
 2-element Vector{Identifier}:
  Ticker: AAPL US Equity

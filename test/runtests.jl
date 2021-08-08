@@ -1,5 +1,5 @@
 using FinancialSymbology
-using Test
+using Test, Documenter
 
 import FinancialSymbology.OpenFigi: figiidtype, makeurl, makejob, splitjobs
 
@@ -51,4 +51,5 @@ end
     fetchsecuritydata(ids[1])
     fetchsecuritydata([ids[1]])
     fetchsecuritydata(ids[2])
+    doctest(FinancialSymbology; manual=false)
 end
