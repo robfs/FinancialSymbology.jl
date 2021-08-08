@@ -19,6 +19,8 @@ See also: [`makesymbol`](@ref)
 
 # Examples
 ```jldoctest
+julia> using FinancialSymbology
+
 julia> Sedol("5505072")
 Sedol: 5505072
 ```
@@ -36,6 +38,8 @@ See also: [`makesymbol`](@ref)
 
 # Examples
 ```jldoctest
+julia> using FinancialSymbology
+
 julia> Cusip("42751Q105")
 Cusip: 42751Q105
 ```
@@ -53,6 +57,8 @@ See also: [`makesymbol`](@ref)
 
 # Examples
 ```jldoctest
+julia> using FinancialSymbology
+
 julia> Isin("US88160R1014")
 Isin: US88160R1014
 ```
@@ -70,8 +76,10 @@ See also: [`makesymbol`](@ref)
 
 # Examples
 ```jldoctest
+julia> using FinancialSymbology
+
 julia> Figi("BBG00JRQS527")
-Isin: BBG00JRQS527
+Figi: BBG00JRQS527
 ```
 """
 struct Figi <: Identifier
@@ -87,6 +95,8 @@ See also: [`makesymbol`](@ref)
 
 # Examples
 ```jldoctest
+julia> using FinancialSymbology
+
 julia> Ticker("AAPL US Equity")
 Ticker: AAPL US Equity
 ```
@@ -105,6 +115,8 @@ See also: [`makesymbol`](@ref)
 
 # Examples
 ```jldoctest
+julia> using FinancialSymbology
+
 julia> Index("990100")
 Index: 990100
 ```

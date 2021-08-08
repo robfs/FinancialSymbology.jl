@@ -176,6 +176,8 @@ See also: [`makesymbol`](@ref)
 
 # Examples
 ```jldoctest
+julia> using FinancialSymbology
+
 julia> fetchsecuritydata([Ticker("AAPL US Equity"), Sedol("BDDXSM4")])
 Dict{String, StructArrays.StructArray} with 2 entries:
   "AAPL US Equity" => FinancialSymbology.OpenFigi.OpenFigiAsset[OpenFigiAsset…
