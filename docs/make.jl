@@ -1,7 +1,7 @@
 using Documenter
 
-using Pkg
-Pkg.activate("..")
+# using Pkg
+# Pkg.activate("..")
 
 using FinancialSymbology
 
@@ -10,6 +10,7 @@ makedocs(
     format = Documenter.HTML(),
     modules = [FinancialSymbology,
                FinancialSymbology.Identifiers,
+               FinancialSymbology.IdChecks,
                FinancialSymbology.OpenFigi],
     doctest = true
 )
