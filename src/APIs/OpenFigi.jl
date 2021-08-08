@@ -8,6 +8,7 @@ using ..Identifiers, ..IdChecks
 
 export OpenFigiAPI, fetchsecuritydata
 
+
 const APIKEYNAME = "X-OPENFIGI-APIKEY"
 
 """
@@ -164,7 +165,7 @@ function extractdata(ids::Vector{<:Identifier}, responses::Vector{Response})::Di
 end
 
 """
-    fetchsecuritydata(id::Identifier, api=OpenFigiAPI())    
+    fetchsecuritydata(id::Identifier, api=OpenFigiAPI()) 
     fetchsecuritydata(ids::Vector{Identifier}, api=OpenFigiAPI())
 
 Fetch Identifier data from API.

@@ -37,6 +37,7 @@ ids = makesymbol.(idstrings)
 
 @testset "IdChecks.jl" begin
     @test all(map((id, t) -> id isa t, ids, idchecks))
+    doctest(FinancialSymbology; manual=false)
 end
 
 @testset "OpenFigiApi.jl" begin
@@ -51,5 +52,4 @@ end
     fetchsecuritydata(ids[1])
     fetchsecuritydata([ids[1]])
     fetchsecuritydata(ids[2])
-    doctest(FinancialSymbology; manual=false)
 end

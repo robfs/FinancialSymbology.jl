@@ -39,7 +39,7 @@ function symboltype(x::AbstractString)::DataType
 end
 
 """
-    makesymbol(x)
+    makesymbol(x::String)
 
 Automatically detect `Identifier` and create type.
 
