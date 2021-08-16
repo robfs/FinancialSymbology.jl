@@ -1,7 +1,7 @@
 module FinancialSymbology
 
-include("Symbols/Identifiers.jl")
-include("Symbols/IdChecks.jl")
+include("Identifiers.jl")
+include("IdChecks.jl")
 include("APIs/APIs.jl")
 include("APIs/OpenFigi.jl")
 
