@@ -1,7 +1,7 @@
 using FinancialSymbology
 using Test, Documenter
 
-import FinancialSymbology.OpenFigi: figiidtype, makeurl, makejob, splitjobs
+import FinancialSymbology: figiidtype, makeurl, makejob, splitjobs
 
 idstrings = [
     "FR0000121014", "US88160R1014", "AAPL US Equity", "5505072", "CH0210483332",
@@ -33,7 +33,7 @@ jobs = [sedoljob, tickerjob]
 
 splitjob = [[sedoljob],[tickerjob]]
 
-ids = makesymbol.(idstrings)
+ids = makeidentifier.(idstrings)
 
 @testset "IdChecks.jl" begin
     @test all(map((id, t) -> id isa t, ids, idchecks))

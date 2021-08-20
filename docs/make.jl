@@ -8,10 +8,7 @@ using FinancialSymbology
 makedocs(
     sitename = "FinancialSymbology",
     format = Documenter.HTML(),
-    modules = [FinancialSymbology,
-               FinancialSymbology.Identifiers,
-               FinancialSymbology.IdChecks,
-               FinancialSymbology.OpenFigi],
+    modules = [FinancialSymbology],
     doctest = true
 )
 

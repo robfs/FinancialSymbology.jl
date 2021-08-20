@@ -35,7 +35,7 @@ ids = [
 
 # is equivalent to
 
-ids = makesymbol.([
+ids = makeidentifier.([
    "B0YQ5W0",
    "037833100",
    "US0378331005",
@@ -46,7 +46,7 @@ ids = makesymbol.([
 
 ## Fetching Data
 
-The `Identifier` vector can then be passed to the `fetchsecuritydata` function to retrieve informaiton from the OpenFIGI database. 
+The `Identifier` vector can then be passed to the `fetchsecuritydata` function to retrieve information from the OpenFIGI database. 
 
 ```julia
 data = fetchsecuritydata(ids)
