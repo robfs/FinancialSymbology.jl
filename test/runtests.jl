@@ -1,7 +1,7 @@
 using FinancialSymbology
 using Test, Documenter
 
-import FinancialSymbology.OpenFigi: figiidtype, makeurl, makejob, splitjobs
+import FinancialSymbology: figiidtype, makeurl, makejob, splitjobs
 
 idstrings = [
     "FR0000121014", "US88160R1014", "AAPL US Equity", "5505072", "CH0210483332",
