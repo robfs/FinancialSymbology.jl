@@ -1,8 +1,7 @@
 using JSON, StructArrays
 import HTTP: Response, request
 
-include("types.jl")
-include("identifierchecks.jl")
+include("identifierutils.jl")
 
 
 function makeurl(api::API)::String
@@ -57,8 +56,6 @@ function request(ids::Vector{<:Identifier}, api::OpenFigiAPI)::Vector{Response}
 
     return out
 end
-
-keystosymbols(d::Dict{String, T} where T)::Dict{Symbol, T} where T = Dict([Symbol(k)=>v for (k, v) in d])
 
 function extractdata(ids::Vector{<:Identifier}, responses::Vector{Response})::Dict{String, StructArray}
     out::Vector{Pair{String, StructArray}} = []
