@@ -2,18 +2,8 @@ using JSON, StructArrays
 import HTTP: Response, request
 
 include("types.jl")
-include("symbolchecks.jl")
+include("identifierchecks.jl")
 
-function symboltype(x::AbstractString)::DataType
-    x = strip(x)
-    if issedol(x); return Sedol
-    elseif iscusip(x); return Cusip
-    elseif isfigi(x); return Figi
-    elseif isisin(x); return Isin
-    elseif isticker(x); return Ticker
-    else; return Figi
-    end
-end
 
 function makeurl(api::API)::String
     return "$(api.protocol)://$(api.base)/$(api.version)/$(api.path)"
@@ -29,7 +19,6 @@ figiidtype(id::Index)::String = "VENDOR_INDEX_CODE"
 
 
 makejob(id::Identifier)::Dict{String, String} = Dict(("idType"=>figiidtype(id), "idValue"=>id.s))
-
 function makejob(id::Ticker)::Dict{String, String}
     components = split(id.s)
     if length(components) == 2

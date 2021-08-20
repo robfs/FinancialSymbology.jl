@@ -33,7 +33,7 @@ jobs = [sedoljob, tickerjob]
 
 splitjob = [[sedoljob],[tickerjob]]
 
-ids = makesymbol.(idstrings)
+ids = makeidentifier.(idstrings)
 
 @testset "IdChecks.jl" begin
     @test all(map((id, t) -> id isa t, ids, idchecks))

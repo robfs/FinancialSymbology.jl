@@ -58,3 +58,14 @@ end
 function isfigi(x::AbstractString)::Bool
     return length(x) == 12 && all(isletter, x[1:3]) && x[3] == 'G'
 end
+
+function identifiertype(x::AbstractString)::DataType
+    x = strip(x)
+    if issedol(x); return Sedol
+    elseif iscusip(x); return Cusip
+    elseif isfigi(x); return Figi
+    elseif isisin(x); return Isin
+    elseif isticker(x); return Ticker
+    else; return Figi
+    end
+end

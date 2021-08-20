@@ -5,32 +5,32 @@ using HTTP, StructArrays
 const APIKEYNAME = "X-OPENFIGI-APIKEY"
 
 include("types.jl")
-include("utils.jl")
+include("apiconstructors.jl")
 
 export Identifier, Sedol, Cusip, Isin, Figi, Ticker, Index
 export OpenFigiAPI
-export makesymbol
+export makeidentifier
 export fetchsecuritydata
 
 """
-    makesymbol(x::String)
+    makeidentifier(x::String)
 
 Automatically detect `Identifier` and create type.
 
 See also: [`fetchsecuritydata`](@ref)
 
 # Examples
-```jldoctest makesymboldoc
+```jldoctest
 julia> using FinancialSymbology
 
-julia> ids = makesymbol.(["AAPL US Equity", "BDDXSM4"])
+julia> ids = makeidentifier.(["AAPL US Equity", "BDDXSM4"])
 2-element Vector{Identifier}:
  "AAPL US Equity"
  "BDDXSM4"
 ```
 """
-function makesymbol(x::AbstractString)::Identifier
-    return symboltype(x)(x)
+function makeidentifier(x::AbstractString)::Identifier
+    return identifiertype(x)(x)
 end
 
 """
@@ -42,7 +42,7 @@ Fetch Identifier data from API.
 Do not broadcast this function over a vector of identifiers. 
 Pass the vector as the `ids` argument.
 
-See also: [`makesymbol`](@ref)
+See also: [`makeidentifier`](@ref)
 
 # Examples
 ```jldoctest
