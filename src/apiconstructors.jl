@@ -17,18 +17,18 @@ figiidtype(id::Ticker)::String = "TICKER"
 figiidtype(id::Index)::String = "VENDOR_INDEX_CODE"
 
 
-makejob(id::Identifier)::Dict{String, String} = Dict(("idType"=>figiidtype(id), "idValue"=>id.s))
-function makejob(id::Ticker)::Dict{String, String}
+makejob(id::Identifier; kwargs...)::Dict{Symbol, String} = Dict((:idType=>figiidtype(id), :idValue=>id.s, kwargs...))
+function makejob(id::Ticker)::Dict{Symbol, String}
     components = split(id.s)
     if length(components) == 2
-        return Dict(["idType"=>"TICKER", "idValue"=>components[1], "marketSecDes"=>components[2]])
+        return Dict([:idType=>"TICKER", :idValue=>components[1], :marketSecDes=>components[2]])
     elseif length(components) == 3
-        return Dict(["idType"=>"TICKER", "idValue"=>components[1], "exchCode"=>components[2], "marketSecDes"=>components[3]])
+        return Dict([:idType=>"TICKER", :idValue=>components[1], :exchCode=>components[2], :marketSecDes=>components[3]])
     end
 end
 
 
-function splitjobs(jobs::Vector{Dict{String, String}}, maxjobs::Int)::Vector{Vector{Dict{String, String}}}
+function splitjobs(jobs::Vector{Dict{Symbol, String}}, maxjobs::Int)::Vector{Vector{Dict{Symbol, String}}}
     return [i+maxjobs > length(jobs) ? jobs[i:end] : jobs[i:i+maxjobs-1] for i in 1:maxjobs:length(jobs)]
 end
 
@@ -41,8 +41,8 @@ end
 
 function request(ids::Vector{<:Identifier}, api::OpenFigiAPI)::Vector{Response}
     (maxjobs, waittime, maxrequests) = getlimits(api)
-    jobs::Vector{Dict{String, String}} = makejob.(ids)
-    joblist::Vector{Vector{Dict{String, String}}} = splitjobs(jobs, maxjobs)
+    jobs::Vector{Dict{Symbol, String}} = makejob.(ids)
+    joblist::Vector{Vector{Dict{Symbol, String}}} = splitjobs(jobs, maxjobs)
     out = []
     for job in joblist
         r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
