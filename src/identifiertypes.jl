@@ -10,7 +10,7 @@ See also: [`makeidentifier`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Sedol("B0YQ5W0")
+julia> sedol_id = Sedol("B0YQ5W0")
 "B0YQ5W0"
 ```
 """
@@ -28,7 +28,7 @@ See also: [`makeidentifier`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Cusip("037833100")
+julia> cusip_id = Cusip("037833100")
 "037833100"
 ```
 """
@@ -46,7 +46,7 @@ See also: [`makeidentifier`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Isin("US0378331005")
+julia> isin_id = Isin("US0378331005")
 "US0378331005"
 ```
 """
@@ -64,7 +64,7 @@ See also: [`makeidentifier`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Figi("BBG001S5N8V8")
+julia> figi_id = Figi("BBG001S5N8V8")
 "BBG001S5N8V8"
 ```
 """
@@ -82,7 +82,7 @@ See also: [`makeidentifier`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Ticker("AAPL US Equity")
+julia> ticker_id = Ticker("AAPL US Equity")
 "AAPL US Equity"
 ```
 """
@@ -99,7 +99,7 @@ Create a Index Identifier.
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Index("990100")
+julia> index_id = Index("990100")
 "990100"
 ```
 """
