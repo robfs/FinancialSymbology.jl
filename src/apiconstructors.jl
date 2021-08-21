@@ -1,6 +1,8 @@
 using JSON, StructArrays
 import HTTP: Response, request
 
+MAPPING_JOB_PROPERTIES = [:idType, :exchCode, :micCode, :currency, :marketSecDes, :securityType, :securityType2, :stateCode]
+
 include("identifierutils.jl")
 
 
@@ -17,18 +19,46 @@ figiidtype(id::Ticker)::String = "TICKER"
 figiidtype(id::Index)::String = "VENDOR_INDEX_CODE"
 
 
-makejob(id::Identifier)::Dict{String, String} = Dict(("idType"=>figiidtype(id), "idValue"=>id.s))
-function makejob(id::Ticker)::Dict{String, String}
+function checkfigikwargs(; kwargs...)
+    for (key, value) in kwargs
+        if !(key in MAPPING_JOB_PROPERTIES)
+            throw(ArgumentError("$(key) not a valid OpenFIGI mapping value."))
+        end
+    end
+end
+
+function makejob(id::AbstractString; kwargs...)::Dict{Symbol, String}
+    checkfigikwargs(; kwargs...)
+    return Dict((:idValue=>id, kwargs...))
+end
+
+
+function makejob(id::Identifier; kwargs...)::Dict{Symbol, String}
+    return makejob(id.s; idType=figiidtype(id), kwargs...)
+end
+
+function makejob(id::Ticker; kwargs...)::Dict{Symbol, String}
     components = split(id.s)
     if length(components) == 2
-        return Dict(["idType"=>"TICKER", "idValue"=>components[1], "marketSecDes"=>components[2]])
+        return makejob(components[1]; idType="TICKER", marketSecDes=components[2], kwargs...)
     elseif length(components) == 3
-        return Dict(["idType"=>"TICKER", "idValue"=>components[1], "exchCode"=>components[2], "marketSecDes"=>components[3]])
+        return makejob(components[1]; idType="TICKER", exchCode=components[2], marketSecDes=components[3], kwargs...)
+    else
+        return makejob(components[1]; idType="TICKER")
+    end
+end
+
+function makejobs(ids::Vector{<:AbstractString}; kwargs...)::Vector{Dict{Symbol, String}}
+    if !any(value isa AbstractVector for (key, value) in kwargs)
+        return makejob.(ids; kwargs...)
+    else
+        kwargslist = collect(zip([key .=> value for (key, value) in kwargs]...))
+        return [makejob(id; kw...) for (id, kw) in zip(ids, kwargslist)]
     end
 end
 
 
-function splitjobs(jobs::Vector{Dict{String, String}}, maxjobs::Int)::Vector{Vector{Dict{String, String}}}
+function splitjobs(jobs::Vector{Dict{Symbol, String}}, maxjobs::Int)::Vector{Vector{Dict{Symbol, String}}}
     return [i+maxjobs > length(jobs) ? jobs[i:end] : jobs[i:i+maxjobs-1] for i in 1:maxjobs:length(jobs)]
 end
 
@@ -39,10 +69,10 @@ function getlimits(api::OpenFigiAPI)::Tuple{Int, Int, Int}
 end
 
 
-function request(ids::Vector{<:Identifier}, api::OpenFigiAPI)::Vector{Response}
+function request(ids::Vector{<:AbstractString}, api::OpenFigiAPI; kwargs...)::Vector{Response}
     (maxjobs, waittime, maxrequests) = getlimits(api)
-    jobs::Vector{Dict{String, String}} = makejob.(ids)
-    joblist::Vector{Vector{Dict{String, String}}} = splitjobs(jobs, maxjobs)
+    jobs = makejobs(ids; kwargs...)
+    joblist = splitjobs(jobs, maxjobs)
     out = []
     for job in joblist
         r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
@@ -57,13 +87,13 @@ function request(ids::Vector{<:Identifier}, api::OpenFigiAPI)::Vector{Response}
     return out
 end
 
-function extractdata(ids::Vector{<:Identifier}, responses::Vector{Response})::Dict{String, StructArray}
+function extractdata(ids::Vector{<:AbstractString}, responses::Vector{Response})::Dict{String, StructArray}
     out::Vector{Pair{String, StructArray}} = []
     i::Int = 1
     for j in JSON.parse.(String.([r.body for r in responses]))
         for v in j
-            if haskey(v, "data"); push!(out, ids[i].s => StructArray(OpenFigiAsset.(v["data"])))
-            else; push!(out, ids[i].s => StructArray([OpenFigiAsset()]))
+            if haskey(v, "data"); push!(out, ids[i] => StructArray(OpenFigiAsset.(v["data"])))
+            else; push!(out, ids[i] => StructArray([OpenFigiAsset()]))
             end
             i += 1
         end

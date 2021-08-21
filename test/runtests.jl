@@ -18,15 +18,15 @@ figitypes = [
 ]
 
 sedoljob = Dict([
-    "idType"=>"ID_SEDOL",
-    "idValue"=>"5505072"
+    :idType=>"ID_SEDOL",
+    :idValue=>"5505072"
 ])
 
 tickerjob = Dict([
-    "idType"=>"TICKER",
-    "idValue"=>"AAPL",
-    "exchCode"=>"US",
-    "marketSecDes"=>"Equity"
+    :idType=>"TICKER",
+    :idValue=>"AAPL",
+    :exchCode=>"US",
+    :marketSecDes=>"Equity"
 ])
 
 jobs = [sedoljob, tickerjob]
