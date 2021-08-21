@@ -17,7 +17,7 @@ julia> Pkg.add("FinancialSymbology")
 julia> using FinancialSymbology
 ```
 
-If you have an OpenFIGI API key it can be set in one of two ways, using either the environment variable `X-OPENFIGI-APIKEY` or setting the `apikey` argument when instantiating an `OpenFigiAPI`. 
+If you have an OpenFIGI API key it can be set in one of two ways, using either the environment variable `X-OPENFIGI-APIKEY` or setting the `apikey` argument when instantiating an [`OpenFigiAPI`](@ref). 
 
 ```julia-repl
 julia> ENV["X-OPENFIGI-APIKEY"] = "enter-api-key"
@@ -28,7 +28,7 @@ OpenFigiAPI: https://api.openfigi.com/v3/mapping
 ```
 ### Symbols
 
-Financial symbols must first be converted to a vector of `Identifier`. This can be automated or done manually (automated detection unavailable for `Index` identifiers).
+Financial symbols must first be converted to a vector of [`Identifier`](@ref identifier_header). This can be automated or done manually (automated detection unavailable for [`Index`](@ref) identifiers).
 
 ```jldoctest; setup = :(using FinancialSymbology)
 julia> ids = makeidentifier.(["B0YQ5W0", "037833100", "US0378331005", "BBG000B9Y5X2", "AAPL US Equity"])
@@ -42,7 +42,7 @@ julia> ids = makeidentifier.(["B0YQ5W0", "037833100", "US0378331005", "BBG000B9Y
 
 ### Fetching Data
 
-The `Identifier` vector can then be passed to the `fetchsecuritydata` function to retrieve information from the OpenFIGI database. 
+The [`Identifier`](@ref identifier_header) vector can then be passed to the [`fetchsecuritydata`](@ref) function to retrieve information from the OpenFIGI database. 
 
 ```@meta
 DocTestSetup = quote
@@ -75,7 +75,7 @@ Dict{String, StructArrays.StructArray} with 5 entries:
   "BBG000B9Y5X2"   => FinancialSymbology.OpenFigiAsset[OpenFigiAsset…
 ```
 
-The function returns a dictionary where the keys are the identifiers and the values are a `StructArray` of `OpenFigiAsset` types. The fields can be indexed into or the objects can be passed to other constructors.
+The function returns a dictionary where the keys are the identifiers and the values are a `StructArray` of [`OpenFigiAsset`](@ref) types. The fields can be indexed into or the objects can be passed to other constructors.
 
 ```@meta
 DocTestSetup = quote
@@ -116,7 +116,7 @@ Modules = [FinancialSymbology]
 Order = [:function]
 ```
 
-## Identifier Types
+## [Identifier Types](@id identifier_header)
 
 ```@autodocs
 Modules = [FinancialSymbology.Identifiers]
