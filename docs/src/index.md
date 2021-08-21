@@ -3,15 +3,26 @@
 ```@contents
 ```
 
+## Installation
+
+```julia-repl
+julia> using Pkg
+
+julia> Pkg.add("FinancialSymbology")
+```
+
 ## Usage
 
-```jldoctest
+```julia-repl
 julia> using FinancialSymbology
 ```
-If you have an OpenFIGI API key it can be set in one of two ways. 
-```jldoctest; setup = :(using FinancialSymbology)
+
+If you have an OpenFIGI API key it can be set in one of two ways, using either the environment variable `X-OPENFIGI-APIKEY` or setting the `apikey` argument when instantiating an `OpenFigiAPI`. 
+
+```julia-repl
 julia> ENV["X-OPENFIGI-APIKEY"] = "enter-api-key"
 "enter-api-key"
+
 julia> api = OpenFigiAPI(apikey="enter-api-key")
 OpenFigiAPI: https://api.openfigi.com/v3/mapping
 ```
@@ -113,7 +124,7 @@ Pages = ["identifiertypes.jl"]
 Order = [:type]
 ```
 
-## API
+## API and Responses
 
 ```@autodocs
 Modules = [FinancialSymbology]
