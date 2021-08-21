@@ -1,6 +1,8 @@
 using JSON, StructArrays
 import HTTP: Response, request
 
+MAPPING_JOB_PROPERTIES = [:idType, :exchCode, :micCode, :currency, :marketSecDes, :securityType, :securityType2, :stateCode]
+
 include("identifierutils.jl")
 
 
@@ -15,6 +17,15 @@ figiidtype(id::Isin)::String = "ID_ISIN"
 figiidtype(id::Figi)::String = "ID_BB_GLOBAL"
 figiidtype(id::Ticker)::String = "TICKER"
 figiidtype(id::Index)::String = "VENDOR_INDEX_CODE"
+
+
+function checkfigikwargs(; kwargs...)
+    for (key, value) in kwargs
+        if !(key in MAPPING_JOB_PROPERTIES)
+            throw(ArgumentError("$(key) not a valid OpenFIGI mapping value."))
+        end
+    end
+end
 
 
 makejob(id::Identifier; kwargs...)::Dict{Symbol, String} = Dict((:idType=>figiidtype(id), :idValue=>id.s, kwargs...))
@@ -40,6 +51,7 @@ end
 
 
 function request(ids::Vector{<:Identifier}, api::OpenFigiAPI; kwargs...)::Vector{Response}
+    checkfigikwargs(; kwargs...)
     (maxjobs, waittime, maxrequests) = getlimits(api)
     jobs::Vector{Dict{Symbol, String}} = makejob.(ids; kwargs...)
     joblist::Vector{Vector{Dict{Symbol, String}}} = splitjobs(jobs, maxjobs)
