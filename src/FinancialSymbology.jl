@@ -4,7 +4,10 @@ using HTTP, StructArrays
 
 const APIKEYNAME = "X-OPENFIGI-APIKEY"
 
-include("identifiertypes.jl")
+include("Identifiers.jl")
+
+using .Identifiers
+
 include("apitypes.jl")
 include("apiconstructors.jl")
 include("prettyprinters.jl")

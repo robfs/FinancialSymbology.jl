@@ -1,3 +1,7 @@
+module Identifiers
+
+export Identifier, Sedol, Cusip, Isin, Ticker, Figi, Index
+
 abstract type Identifier <: AbstractString end
 
 
@@ -5,8 +9,6 @@ abstract type Identifier <: AbstractString end
     Sedol(x::String)
 
 Create a Sedol Identifier.
-
-See also: [`makeidentifier`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
@@ -24,8 +26,6 @@ end
 
 Create a Cusip Identifier.
 
-See also: [`makeidentifier`](@ref)
-
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
 julia> cusip_id = Cusip("037833100")
@@ -41,8 +41,6 @@ end
     Isin(x::String)
 
 Create a ISIN Identifier.
-
-See also: [`makeidentifier`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
@@ -60,8 +58,6 @@ end
 
 Create a FIGI Identifier.
 
-See also: [`makeidentifier`](@ref)
-
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
 julia> figi_id = Figi("BBG001S5N8V8")
@@ -77,8 +73,6 @@ end
     Ticker(x::String)
 
 Create a Ticker Identifier.
-
-See also: [`makeidentifier`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
@@ -131,3 +125,5 @@ Ticker(s::Missing) = missing
 Index(s::Identifier) = Index(s.s)
 Index(s::Ticker) = s
 Index(s::Missing) = missing
+
+end # module

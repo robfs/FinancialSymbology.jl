@@ -119,8 +119,8 @@ Order = [:function]
 ## Identifier Types
 
 ```@autodocs
-Modules = [FinancialSymbology]
-Pages = ["identifiertypes.jl"]
+Modules = [FinancialSymbology.Identifiers]
+Pages = ["Identifiers.jl"]
 Order = [:type]
 ```
 
