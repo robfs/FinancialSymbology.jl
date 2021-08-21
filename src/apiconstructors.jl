@@ -39,9 +39,9 @@ function getlimits(api::OpenFigiAPI)::Tuple{Int, Int, Int}
 end
 
 
-function request(ids::Vector{<:Identifier}, api::OpenFigiAPI)::Vector{Response}
+function request(ids::Vector{<:Identifier}, api::OpenFigiAPI; kwargs...)::Vector{Response}
     (maxjobs, waittime, maxrequests) = getlimits(api)
-    jobs::Vector{Dict{Symbol, String}} = makejob.(ids)
+    jobs::Vector{Dict{Symbol, String}} = makejob.(ids; kwargs...)
     joblist::Vector{Vector{Dict{Symbol, String}}} = splitjobs(jobs, maxjobs)
     out = []
     for job in joblist

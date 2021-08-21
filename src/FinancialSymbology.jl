@@ -55,13 +55,13 @@ Dict{String, StructArrays.StructArray} with 2 entries:
   "BDDXSM4"        => FinancialSymbology.OpenFigiAsset[OpenFigiAsset…
 ```
 """
-function fetchsecuritydata(ids::Vector{<:Identifier}, api::OpenFigiAPI=OpenFigiAPI())::Dict{String, StructArray}
-    responses = request(ids, api)
+function fetchsecuritydata(ids::Vector{<:Identifier}, api::OpenFigiAPI=OpenFigiAPI(); kwargs...)::Dict{String, StructArray}
+    responses = request(ids, api; kwargs...)
     return extractdata(ids, responses)
 end
 
-function fetchsecuritydata(id::Identifier, api::OpenFigiAPI=OpenFigiAPI())::StructArray
-    data = fetchsecuritydata([id], api)
+function fetchsecuritydata(id::Identifier, api::OpenFigiAPI=OpenFigiAPI(); kwargs...)::StructArray
+    data = fetchsecuritydata([id], api; kwargs...)
     return data[id]
 end
 
