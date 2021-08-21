@@ -27,14 +27,33 @@ function checkfigikwargs(; kwargs...)
     end
 end
 
+function makejob(id::AbstractString; kwargs...)::Dict{Symbol, String}
+    checkfigikwargs(; kwargs...)
+    return Dict((:idValue=>id, kwargs...))
+end
 
-makejob(id::Identifier; kwargs...)::Dict{Symbol, String} = Dict((:idType=>figiidtype(id), :idValue=>id.s, kwargs...))
-function makejob(id::Ticker)::Dict{Symbol, String}
+
+function makejob(id::Identifier; kwargs...)::Dict{Symbol, String}
+    return makejob(id.s; idType=figiidtype(id), kwargs...)
+end
+
+function makejob(id::Ticker; kwargs...)::Dict{Symbol, String}
     components = split(id.s)
     if length(components) == 2
-        return Dict([:idType=>"TICKER", :idValue=>components[1], :marketSecDes=>components[2]])
+        return makejob(components[1]; idType="TICKER", marketSecDes=components[2], kwargs...)
     elseif length(components) == 3
-        return Dict([:idType=>"TICKER", :idValue=>components[1], :exchCode=>components[2], :marketSecDes=>components[3]])
+        return makejob(components[1]; idType="TICKER", exchCode=components[2], marketSecDes=components[3], kwargs...)
+    else
+        return makejob(components[1]; idType="TICKER")
+    end
+end
+
+function makejobs(ids::Vector{<:AbstractString}; kwargs...)::Vector{Dict{Symbol, String}}
+    if !any(value isa AbstractVector for (key, value) in kwargs)
+        return makejob.(ids; kwargs...)
+    else
+        kwargslist = collect(zip([key .=> value for (key, value) in kwargs]...))
+        return [makejob(id; kw...) for (id, kw) in zip(ids, kwargslist)]
     end
 end
 
@@ -50,11 +69,10 @@ function getlimits(api::OpenFigiAPI)::Tuple{Int, Int, Int}
 end
 
 
-function request(ids::Vector{<:Identifier}, api::OpenFigiAPI; kwargs...)::Vector{Response}
-    checkfigikwargs(; kwargs...)
+function request(ids::Vector{<:AbstractString}, api::OpenFigiAPI; kwargs...)::Vector{Response}
     (maxjobs, waittime, maxrequests) = getlimits(api)
-    jobs::Vector{Dict{Symbol, String}} = makejob.(ids; kwargs...)
-    joblist::Vector{Vector{Dict{Symbol, String}}} = splitjobs(jobs, maxjobs)
+    jobs = makejobs(ids; kwargs...)
+    joblist = splitjobs(jobs, maxjobs)
     out = []
     for job in joblist
         r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
@@ -69,13 +87,13 @@ function request(ids::Vector{<:Identifier}, api::OpenFigiAPI; kwargs...)::Vector
     return out
 end
 
-function extractdata(ids::Vector{<:Identifier}, responses::Vector{Response})::Dict{String, StructArray}
+function extractdata(ids::Vector{<:AbstractString}, responses::Vector{Response})::Dict{String, StructArray}
     out::Vector{Pair{String, StructArray}} = []
     i::Int = 1
     for j in JSON.parse.(String.([r.body for r in responses]))
         for v in j
-            if haskey(v, "data"); push!(out, ids[i].s => StructArray(OpenFigiAsset.(v["data"])))
-            else; push!(out, ids[i].s => StructArray([OpenFigiAsset()]))
+            if haskey(v, "data"); push!(out, ids[i] => StructArray(OpenFigiAsset.(v["data"])))
+            else; push!(out, ids[i] => StructArray([OpenFigiAsset()]))
             end
             i += 1
         end

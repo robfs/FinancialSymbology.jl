@@ -56,7 +56,7 @@ end
 
 
 """
-    OpenFigiAsset(;figi::Union{String, Nothing}=nothing,
+    OpenFigiAsset(; figi::Union{String, Nothing}=nothing,
                   marketSector::Union{String, Nothing}=nothing,
                   securityType::Union{String, Nothing}=nothing,
                   ticker::Union{String, Nothing}=nothing,
@@ -68,7 +68,7 @@ end
                   shareClassFIGI::Union{String, Nothing}=nothing)::OpenFigiAsset
 
 Each element of the `StructArray` returned by [`fetchsecuritydata`](@ref) for an
-individual `Identifier` is an `OpenFigiAsset`. 
+individual [`Identifier`](@ref identifier_header) is an `OpenFigiAsset`. 
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
@@ -81,26 +81,24 @@ julia> aapl[1].shareClassFIGI
 "BBG001S5N8V8"
 ```
 """
-function OpenFigiAsset(;
-    figi::Union{String, Nothing}=nothing,
-    marketSector::Union{String, Nothing}=nothing,
-    securityType::Union{String, Nothing}=nothing,
-    ticker::Union{String, Nothing}=nothing,
-    name::Union{String, Nothing}=nothing,
-    exchCode::Union{String, Nothing}=nothing,
-    securityDescription::Union{String, Nothing}=nothing,
-    securityType2::Union{String, Nothing}=nothing,
-    compositeFIGI::Union{String, Nothing}=nothing,
-    shareClassFIGI::Union{String, Nothing}=nothing
-)
-    return OpenFigiAsset(
-        figi, marketSector, securityType, ticker, name, exchCode,
-        securityDescription, securityType2, compositeFIGI, shareClassFIGI
-    )
+function OpenFigiAsset(; figi::Union{String, Nothing}=nothing,
+                       marketSector::Union{String, Nothing}=nothing,
+                       securityType::Union{String, Nothing}=nothing,
+                       ticker::Union{String, Nothing}=nothing,
+                       name::Union{String, Nothing}=nothing,
+                       exchCode::Union{String, Nothing}=nothing,
+                       securityDescription::Union{String, Nothing}=nothing,
+                       securityType2::Union{String, Nothing}=nothing,
+                       compositeFIGI::Union{String, Nothing}=nothing,
+                       shareClassFIGI::Union{String, Nothing}=nothing)::OpenFigiAsset
+
+    return OpenFigiAsset(figi, marketSector, securityType, ticker, name, exchCode,
+                         securityDescription, securityType2, compositeFIGI, shareClassFIGI)
+
 end
 
 keystosymbols(d::Dict{String, T} where T)::Dict{Symbol, T} where T = Dict([Symbol(k)=>v for (k, v) in d])
 
-function OpenFigiAsset(d::Dict{String, Any})
+function OpenFigiAsset(d::Dict{String, Any})::OpenFigiAsset
     return OpenFigiAsset(; keystosymbols(d)...)
 end
