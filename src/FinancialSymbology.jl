@@ -30,6 +30,11 @@ julia> ids = makeidentifier.(["AAPL US Equity", "BDDXSM4"])
 2-element Vector{Identifier}:
  "AAPL US Equity"
  "BDDXSM4"
+
+julia> typeof.(ids)
+2-element Vector{Identifier}:
+ Ticker
+ Isin
 ```
 """
 function makeidentifier(x::AbstractString)::Identifier

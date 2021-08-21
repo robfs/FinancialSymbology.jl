@@ -26,9 +26,9 @@ julia> ENV["X-OPENFIGI-APIKEY"] = "enter-api-key"
 julia> api = OpenFigiAPI(apikey="enter-api-key")
 OpenFigiAPI: https://api.openfigi.com/v3/mapping
 ```
-### Symbols
+### Identifiers
 
-Financial symbols must first be converted to a vector of [`Identifier`](@ref identifier_header). This can be automated or done manually (automated detection unavailable for [`Index`](@ref) identifiers).
+Financial symbols can either be converted to a vector of [`Identifier`](@ref identifier_header)s or passed as `String`s along with the `idType` input to the [`fetchsecuritydata`](@ref). `Identifier` types can be created using the [`makeidentifier`](@ref) function or done manually using the constructors listed in [`Identifiers`](@ref identifier_header) (automated detection unavailable for [`Index`](@ref) identifiers).
 
 ```jldoctest; setup = :(using FinancialSymbology)
 julia> ids = makeidentifier.(["B0YQ5W0", "037833100", "US0378331005", "BBG000B9Y5X2", "AAPL US Equity"])
@@ -42,19 +42,19 @@ julia> ids = makeidentifier.(["B0YQ5W0", "037833100", "US0378331005", "BBG000B9Y
 
 ### Fetching Data
 
-The [`Identifier`](@ref identifier_header) vector can then be passed to the [`fetchsecuritydata`](@ref) function to retrieve information from the OpenFIGI database. 
-
-```@meta
-DocTestSetup = quote
-    using FinancialSymbology
-    if "X-OPENFIGI-APIKEY" in keys(ENV)
-        delete!(ENV, "X-OPENFIGI-APIKEY")
-    end
-    ids = makeidentifier.(["B0YQ5W0","037833100","US0378331005","BBG000B9Y5X2","AAPL US Equity"])
-end
-```
+The [`fetchsecuritydata`](@ref) function is the primary interface to the OpenFIGI API. The examples in the function documentation detail some of the different ways it can be used. 
 
 ```jldoctest
+julia> using FinancialSymbology
+
+julia> ids = makeidentifier.(["B0YQ5W0","037833100","US0378331005","BBG000B9Y5X2","AAPL US Equity"])
+5-element Vector{Identifier}:
+ "B0YQ5W0"
+ "037833100"
+ "US0378331005"
+ "BBG000B9Y5X2"
+ "AAPL US Equity"
+
 julia> data = fetchsecuritydata(ids)
 Dict{String, StructArrays.StructArray} with 5 entries:
   "US0378331005"   => FinancialSymbology.OpenFigiAsset[OpenFigiAsset…
@@ -75,7 +75,7 @@ Dict{String, StructArrays.StructArray} with 5 entries:
   "BBG000B9Y5X2"   => FinancialSymbology.OpenFigiAsset[OpenFigiAsset…
 ```
 
-The function returns a dictionary where the keys are the identifiers and the values are a `StructArray` of `OpenFigiAsset` types. The fields can be indexed into or the objects can be passed to other constructors.
+The function returns a `Dict` where the keys are the identifiers and the values are a `StructArray` of `OpenFigiAsset` types. The fields can be indexed into or the objects can be passed to other constructors.
 
 ```@meta
 DocTestSetup = quote
