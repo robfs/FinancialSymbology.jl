@@ -55,6 +55,32 @@ function OpenFigiAPI(protocol::AbstractString="https",
 end
 
 
+"""
+    OpenFigiAsset(;figi::Union{String, Nothing}=nothing,
+                  marketSector::Union{String, Nothing}=nothing,
+                  securityType::Union{String, Nothing}=nothing,
+                  ticker::Union{String, Nothing}=nothing,
+                  name::Union{String, Nothing}=nothing,
+                  exchCode::Union{String, Nothing}=nothing,
+                  securityDescription::Union{String, Nothing}=nothing,
+                  securityType2::Union{String, Nothing}=nothing,
+                  compositeFIGI::Union{String, Nothing}=nothing,
+                  shareClassFIGI::Union{String, Nothing}=nothing)::OpenFigiAsset
+
+Each element of the `StructArray` returned by [`fetchsecuritydata`](@ref) for an
+individual `Identifier` is an `OpenFigiAsset`. 
+
+# Example
+```jldoctest; setup = :(using FinancialSymbology)
+julia> aapl = fetchsecuritydata(Ticker("AAPL US Equity"));
+
+julia> aapl[1]
+FIGI: BBG000B9XRY4 Common Stock
+
+julia> aapl[1].shareClassFIGI
+"BBG001S5N8V8"
+```
+"""
 function OpenFigiAsset(;
     figi::Union{String, Nothing}=nothing,
     marketSector::Union{String, Nothing}=nothing,

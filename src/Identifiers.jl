@@ -1,3 +1,7 @@
+module Identifiers
+
+export Identifier, Sedol, Cusip, Isin, Ticker, Figi, Index
+
 abstract type Identifier <: AbstractString end
 
 
@@ -6,11 +10,9 @@ abstract type Identifier <: AbstractString end
 
 Create a Sedol Identifier.
 
-See also: [`makeidentifier`](@ref)
-
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Sedol("B0YQ5W0")
+julia> sedol_id = Sedol("B0YQ5W0")
 "B0YQ5W0"
 ```
 """
@@ -24,11 +26,9 @@ end
 
 Create a Cusip Identifier.
 
-See also: [`makeidentifier`](@ref)
-
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Cusip("037833100")
+julia> cusip_id = Cusip("037833100")
 "037833100"
 ```
 """
@@ -42,11 +42,9 @@ end
 
 Create a ISIN Identifier.
 
-See also: [`makeidentifier`](@ref)
-
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Isin("US0378331005")
+julia> isin_id = Isin("US0378331005")
 "US0378331005"
 ```
 """
@@ -60,11 +58,9 @@ end
 
 Create a FIGI Identifier.
 
-See also: [`makeidentifier`](@ref)
-
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Figi("BBG001S5N8V8")
+julia> figi_id = Figi("BBG001S5N8V8")
 "BBG001S5N8V8"
 ```
 """
@@ -78,11 +74,9 @@ end
 
 Create a Ticker Identifier.
 
-See also: [`makeidentifier`](@ref)
-
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Ticker("AAPL US Equity")
+julia> ticker_id = Ticker("AAPL US Equity")
 "AAPL US Equity"
 ```
 """
@@ -99,7 +93,7 @@ Create a Index Identifier.
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
-julia> Index("990100")
+julia> index_id = Index("990100")
 "990100"
 ```
 """
@@ -131,3 +125,5 @@ Ticker(s::Missing) = missing
 Index(s::Identifier) = Index(s.s)
 Index(s::Ticker) = s
 Index(s::Missing) = missing
+
+end # module

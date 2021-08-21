@@ -4,7 +4,10 @@ using HTTP, StructArrays
 
 const APIKEYNAME = "X-OPENFIGI-APIKEY"
 
-include("identifiertypes.jl")
+include("Identifiers.jl")
+
+using .Identifiers
+
 include("apitypes.jl")
 include("apiconstructors.jl")
 include("prettyprinters.jl")
@@ -40,9 +43,9 @@ end
 Fetch Identifier data from API.
 
 Do not broadcast this function over a vector of identifiers. 
-Pass the vector as the `ids` argument.
+Pass the vector as the `ids` argument. Returns a `Dict` with `Identifier` strings as keys.
 
-See also: [`makeidentifier`](@ref)
+See also: [`makeidentifier`](@ref), [`OpenFigiAPI`](@ref), [`OpenFigiAsset`](@ref)
 
 # Example
 ```jldoctest; setup = :(using FinancialSymbology)
@@ -57,8 +60,9 @@ function fetchsecuritydata(ids::Vector{<:Identifier}, api::OpenFigiAPI=OpenFigiA
     return extractdata(ids, responses)
 end
 
-function fetchsecuritydata(id::Identifier, api::OpenFigiAPI=OpenFigiAPI())::Dict{String, StructArray}
-    return fetchsecuritydata([id], api)
+function fetchsecuritydata(id::Identifier, api::OpenFigiAPI=OpenFigiAPI())::StructArray
+    data = fetchsecuritydata([id], api)
+    return data[id]
 end
 
 
