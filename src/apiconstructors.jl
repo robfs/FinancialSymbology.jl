@@ -1,4 +1,4 @@
-using JSON, StructArrays
+using JSON, StructArrays, ProgressMeter
 import HTTP: Response, request
 
 MAPPING_JOB_PROPERTIES = [:idType, :exchCode, :micCode, :currency, :marketSecDes, :securityType, :securityType2, :stateCode]
@@ -74,6 +74,7 @@ function request(ids::Vector{<:AbstractString}, api::OpenFigiAPI; kwargs...)::Ve
     jobs = makejobs(ids; kwargs...)
     joblist = splitjobs(jobs, maxjobs)
     out = []
+    p = Progress(length(joblist))
     for job in joblist
         r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
         while r.status == 429
@@ -82,6 +83,7 @@ function request(ids::Vector{<:AbstractString}, api::OpenFigiAPI; kwargs...)::Ve
             r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
         end
         push!(out, r)
+        next!(p)
     end
 
     return out
