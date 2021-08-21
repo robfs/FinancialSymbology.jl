@@ -75,7 +75,7 @@ Dict{String, StructArrays.StructArray} with 5 entries:
   "BBG000B9Y5X2"   => FinancialSymbology.OpenFigiAsset[OpenFigiAsset…
 ```
 
-The function returns a dictionary where the keys are the identifiers and the values are a `StructArray` of [`OpenFigiAsset`](@ref) types. The fields can be indexed into or the objects can be passed to other constructors.
+The function returns a dictionary where the keys are the identifiers and the values are a `StructArray` of `OpenFigiAsset` types. The fields can be indexed into or the objects can be passed to other constructors.
 
 ```@meta
 DocTestSetup = quote
