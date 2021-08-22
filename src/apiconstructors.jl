@@ -65,7 +65,7 @@ end
 
 function getlimits(api::OpenFigiAPI)::Tuple{Int, Int, Int}
     d = Dict(api.headers)
-    return haskey(d, APIKEYNAME) && length(d[APIKEYNAME]) > 0 ? (100, 6, 25) : (5, 60, 25)
+    return haskey(d, APIKEYNAME) && length(d[APIKEYNAME]) > 0 ? (100, 6, 25) : (10, 60, 25)
 end
 
 
@@ -78,8 +78,10 @@ function request(ids::Vector{<:AbstractString}, api::OpenFigiAPI; kwargs...)::Ve
     for job in joblist
         r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
         while r.status == 429
-            println("Limit exceeded. Retrying in $(waittime)s")
-            sleep(waittime)
+            for i in 0:waittime
+                print("\rLimit exceeded. Retrying in $(rpad(waittime - i, 3))s")
+                sleep(1)
+            end
             r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
         end
         push!(out, r)
