@@ -8,7 +8,7 @@ Communicates with the [OpenFIGI API](https://www.openfigi.com/api) to retrieve s
 
 # Usage
 
-`fetchsecuritydata` can be used either using `String`s as identifiers or the built-in `Type`s in the [`Identifiers`](@ref id_header) module. 
+`fetchsecuritydata` can be used either using `String`s as identifiers or the built-in `Type`s in the Identifiers module. 
 
 ```julia-repl
 julia> using FinancialSymbology
@@ -124,7 +124,7 @@ Dict{String, StructArrays.StructArray} with 3 entries:
   "BBG000B9XRY4" => FinancialSymbology.OpenFigiAsset[OpenFigiAsset…
 ```
 
-## [Identifiers](@id id_header)
+## Identifiers
 
 Financial symbols must first be converted to a vector of `Identifier`. This can be automated or done manually (automated detection unavailable for `Index` identifiers).
 
@@ -133,7 +133,7 @@ julia> ids = makeidentifier.(["B0YQ5W0",
                               "037833100",
                               "US0378331005",
                               "BBG000B9Y5X2",
-                              "AAPL US Equity")
+                              "AAPL US Equity"])
 5-element Vector{Identifier}:
  "B0YQ5W0"
  "037833100"
