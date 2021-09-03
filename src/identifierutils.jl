@@ -65,7 +65,6 @@ function identifiertype(x::AbstractString)::DataType
     elseif iscusip(x); return Cusip
     elseif isfigi(x); return Figi
     elseif isisin(x); return Isin
-    elseif isticker(x); return Ticker
-    else; return Figi
+    else; return Ticker
     end
 end
